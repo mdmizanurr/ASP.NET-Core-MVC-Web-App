@@ -1,0 +1,128 @@
+﻿@model PDHClient.DTO.PatientsDTO
+
+
+<form enctype="multipart/form-data" asp-controller="Patient" asp-action="Create" method="post" class="mt-6">
+    @Html.AntiForgeryToken()
+    <div asp-validation-summary="All" class="text-danger"></div>
+    
+    @* Patient Name *@
+    <div class="form-group row">
+        <label asp-for="patientName" class="col-md-2 col-sm-2  col-xs-12 col-form-label"></label>
+        <div class="col-md-4 col-sm-4  col-xs-12">
+            <input asp-for="patientName" class="form-control" placeholder="Enter Name" autocomplete="off" />
+            <span asp-validation-for="patientName" class="text-danger"></span>
+        </div>
+    </div> <br />
+    
+    @* Diseases Name *@
+    <div class="form-group row">
+        <label asp-for="diseasesID" class="col-md- col-sm-2  col-xs-12 col-form-label"></label>
+        <div class="col-md-4 col-sm-4  col-xs-12">
+            <select asp-for="diseasesID" class="custom-select col-sm-8" asp-items="@Model.DiseasesNameListItems">
+                <option value=""></option>
+            </select>
+
+            <span asp-validation-for="diseasesID" class="text-danger"></span>
+        </div>
+    </div>
+
+    @* Epilepsy *@
+    <div class="form-group row">
+        <label asp-for="epilepsy" class="col-md-2 col-sm-2  col-xs-12 col-form-label">Epilepsy <span style="color:red;">*</span></label>
+        <div class="col-md-4 col-sm-4  col-xs-12">
+            <select asp-for="epilepsy" class="custom-select col-sm-8 multiAdd"
+                    asp-items="Html.GetEnumSelectList<Epilep>()">
+            </select>
+            <span asp-validation-for="epilepsy" class="text-danger"></span>
+        </div>
+    </div>
+
+    @* NCD Name *@
+    <div class="form-group row">
+        <label asp-for="ncdid" class="col-md-2 col-sm-2  col-xs-12 col-form-label">Other NCDs</label>
+        <div class="col-md-3 col-sm-3  col-xs-12">
+            <select asp-for="ncdid" class="custom-select col-sm-10 fromNcd"
+                    asp-items="@Model.NCDDiseasesNameListItems" multiple="multiple">               
+            </select>           
+        </div>
+        <div class="col-sm-2 col-md-2" style="text-align:left; width: 120px;">
+            <div><button type="button" class="btn btn-primary btnAddNcd" style="width: 100px; margin-bottom: 5px;">Add&gt;&gt;</button></div>
+            <div><button type="button" class="btn btn-warning btnRemoveNcd" style="width: 100px;">&lt;&lt;Remove</button> </div>
+        </div>
+        <div class="col-md-3 col-sm-3  col-xs-12 offset-1">
+            <select asp-for="ncdid" class="custom-select col-sm-10 deleteNcd" multiple="multiple">
+            </select>
+        </div>
+    </div> <br />
+
+    @* Allergies Name *@
+    <div class="form-group row">
+        <label asp-for="allergiesID" class="col-md-2 col-sm-2  col-xs-12 col-form-label col-form-label">Allergies</label>
+        <div class="col-md-3 col-sm-3  col-xs-12">
+            <select asp-for="allergiesID" class="custom-select col-sm-10"
+                    asp-items="@Model.AllergiesDiseasesListItems" multiple="multiple">              
+            </select>           
+        </div>
+        <div class="col-sm-2 col-md-2" style="text-align:left; width: 120px;">
+            <div><button type="button" class="btn btn-primary addItem" style="width: 100px; margin-bottom: 5px;">Add&gt;&gt;</button></div>
+            <div><button type="button" class="btn btn-warning" style="width: 100px;">&lt;&lt;Remove</button> </div>
+        </div>
+        <div class="col-md-3 col-sm-3  col-xs-12 offset-1">
+            <select asp-for="allergiesID" class="custom-select col-sm-10" multiple="multiple">
+            </select>
+        </div>
+    </div> <br />
+
+
+    <div class="form-group">
+        <div class="col-sm-2 col-md-2 offset-3">
+            <br />
+            <button type="submit" class="btn btn-success">Create</button>
+            <a asp-controller="Patient" asp-action="index" class="btn btn-danger offset-3">Back</a>
+        </div>
+    </div>
+</form>
+
+
+
+@* Java Script *@
+
+<script type="text/javascript">
+    
+    const btnAddNcd = document.querySelector(".btnAddNcd");
+    const btnRemoveNcd = document.querySelector(".btnRemoveNcd");
+    const deleteNcd = document.querySelector(".deleteNcd");
+    const fromNcd = document.querySelector(".fromNcd");
+
+    // Add to list
+    btnAddNcd.onclick = (e) => {        
+        e.preventDefault();
+
+        if (fromNcd.value == '') {
+            alert("Please select One");
+            return;
+        }
+        const option = new Option(fromNcd.value, fromNcd.value);
+        deleteNcd.add(option, undefined);                
+        fromNcd.focus();
+    };
+
+    // Remove from list
+
+    btnRemoveNcd.onclick = (e) => {        
+        e.preventDefault();
+
+        let selected = [];
+
+        for (let i = 0; i < deleteNcd.options.length; i++) {
+            selected[i] = deleteNcd.options[i].selected;
+        }
+        let index = deleteNcd.options.length;
+        while (index--) {
+            if (selected[index]) {
+                deleteNcd.remove(index);
+            }
+        }
+    };
+
+</script>
