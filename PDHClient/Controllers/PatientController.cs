@@ -70,17 +70,21 @@ namespace PDHClient.Controllers
 
         }
 
+        [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
             try
             {
                 PatientsDTO model = new PatientsDTO();
 
-                response = await client.GetAsync(apiUrl + APIAddress.PatientDetails + id);
+                response = await client.GetAsync(apiUrl + APIAddress.PatientEdit + id);
                 if (response.IsSuccessStatusCode)
                 {
                     model = response.Content.ReadFromJsonAsync<PatientsDTO>().Result;
                 }
+
+                MapDropDown(model);
+
                 return View(model);
 
             }
@@ -88,37 +92,72 @@ namespace PDHClient.Controllers
             {
                 return RedirectToAction("Error", "Home");
             }
-            return View();
         }
 
 
-        [HttpPost]
-        public async Task<IActionResult> Delete(int id)
+
+        [HttpGet]
+        public async Task<JsonResult> Delete(int id)
         {
+            int result = 0;
+            string message = string.Empty;
             try
             {
+
                 if (id == null)
                 {
-                    return BadRequest();
+                    message = "Id not found";
                 }
 
-                response = await client.PostAsJsonAsync(apiUrl + APIAddress.DeletePatients, id);
 
+                //response = await client.DeleteAsync(apiUrl + APIAddress.DeletePatients + "?id=" + id);
+                response = await client.GetAsync(apiUrl + APIAddress.DeletePatients + "?id=" + id);
                 if (response.IsSuccessStatusCode)
                 {
-                    return RedirectToAction("Index");
+                    //result = 1;
+                    //message = "Delete Successfully";
+                    Redirect("Index");
                 }
 
-                return View();
+
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return RedirectToAction("Error", "Home");
+                message = "Update Denied";
             }
 
-
-
+            return Json(new { result = result, message = message });
         }
+
+
+
+        //[HttpPost]
+        //public async Task<IActionResult> Delete(int id)
+        //{
+        //    try
+        //    {
+        //        if (id == null)
+        //        {
+        //            return BadRequest();
+        //        }
+
+        //        response = await client.PostAsJsonAsync(apiUrl + APIAddress.DeletePatients, id);
+
+        //        if (response.IsSuccessStatusCode)
+        //        {
+        //            return RedirectToAction("Index");
+        //        }
+
+        //        return View();
+        //    }
+        //    catch (Exception)
+        //    {
+        //        return RedirectToAction("Error", "Home");
+        //    }
+
+
+
+        //}
 
 
         private async void MapDropDown(PatientsDTO model)

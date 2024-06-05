@@ -3,7 +3,7 @@
 
 
 @{
-    ViewData["Title"] = "Index";    
+    ViewData["Title"] = "Index";
 }
 
 <div class="container">
@@ -28,16 +28,14 @@
                 @foreach (var item in Model)
                 {
                     <tbody>
-                        <tr>
-                            <td id="patien" hidden>@item.Id</td>
+                        <tr>                            
                             <td>@item.patientName</td>
                             <td>@item.epilepsy</td>
                             <td>@item.diseasesID</td>
                             <td>@item.ncdid</td>
                             <td>@item.allergiesID</td>
-                            <td> <a class="btn btn-success" href="/patient/edit?id=@item.Id">Edit</a> </td>
-                            @* href="/patient/delete?id=@item.Id" *@
-                            <td> <a class="btn btn-warning delPatient" >Delete</a> </td>
+                            <td> <a class="btn btn-success" href="/patient/edit?id=@item.Id">Edit</a> </td>                            
+                            <td> <a class="btn btn-warning delPatient" onclick="remove('@item.Id')">Delete</a> </td>
                         </tr>
                     </tbody>
                 }
@@ -48,36 +46,77 @@
 
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
 
- <script type="text/javascript">
+<script type="text/javascript">
 
- 
+    $(document).ready(function () {         
+    
+    });
 
-   // var patien = $("#petien").val();
+    function remove(id) {        
 
+        $.ajax({
+            url: '@Url.Action("Delete", "Patient")',
+            type: "GET",
+            data: {
+                id: id
+            },
+            success: (function () {                                                    
+                    alert("Deleted Successflully!", "")
+                    window.location.reload();                                    
+            }),
+            error: (function (result) {
+                alertWarning("Load failed", "");
+               
+            }),
+        });
+     
 
-    $(".delPatient").click(function (e) {
-
-        var patien = $("#petien").val();       
-        
-        if (patien != "") {      
-            e.preventDefault();
-             $.ajax({
-                type: 'POST',
-                contentType: "application/json; charset=utf-8",
-                 url: "/Patient/delete",
-                 dataType:'json',
-                data: JSON.stringify({ patien: patien }),
-                
-                 success: function () {
-                    alert("Success");
-                 },
-                 error: function () {
-                    alert("Error");
-                 }
-             });
-         }
+    }
 
 
-     })
- 
- </script>
+
+
+    // $(".delPatient").click(function(e) {
+
+    //     // var patien = $("#patien").val();
+    //     var delPatient = $(".delPatient").val();
+
+    //     debugger
+
+
+    //     $.ajax({
+    //         url: '@Url.Action("delete", "Patient")',
+    //         type: "POST",
+    //         data: { delPatient: delPatient },
+
+    //         success: function () {
+    //             alert("Success");
+    //         },
+    //         error: function () {
+    //             alert("Error");
+    //         }
+    //     });
+
+
+    //     // if (pvalue != "") {
+    //     //     e.preventDefault();
+    //     //      $.ajax({
+    //     //         type: 'DELETE',
+    //     //         contentType: "application/json; charset=utf-8",
+    //     //          url: "/Patient/delete",
+    //     //          dataType:'json',
+    //     //         data: JSON.stringify({ pvalue: pvalue }),
+
+    //     //          success: function () {
+    //     //             alert("Success");
+    //     //          },
+    //     //          error: function () {
+    //     //             alert("Error");
+    //     //          }
+    //     //      });
+    //     //  }
+
+
+    // });
+
+</script>

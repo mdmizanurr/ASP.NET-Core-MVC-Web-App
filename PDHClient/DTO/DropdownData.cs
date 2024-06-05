@@ -37,7 +37,7 @@ namespace PDHClient.DTO
         public const string AllPatients = "API/Patients/All-Patients";
         public const string CreatePatients = "API/Patients/Add-Patient";
         public const string DeletePatients = "API/Patients/Delete-PatientById";
-        public const string PatientDetails = "API/Patients/Patient-Details/";
+        public const string PatientEdit = "API/Patients/Patient-Details?id=";
 
 
     }
